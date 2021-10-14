@@ -46,7 +46,7 @@ export default class Pawn extends Figure {
       [x, y + 1] :
       [x, y - 1];
 
-    const isFirstSquareAllowed = getPositionValue(
+    const isFirstSquareAllowed = !getPositionValue(
       gamePosition,
       firstApplicant,
     );
@@ -57,7 +57,7 @@ export default class Pawn extends Figure {
       const secondApplicant: Coordinate = this.color === 'white' ?
         [x, y + 2] :
         [x, y - 2];
-      const isSecondSquareAllowed = getPositionValue(
+      const isSecondSquareAllowed = !getPositionValue(
         gamePosition,
         secondApplicant,
       );

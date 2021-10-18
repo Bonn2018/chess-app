@@ -1,6 +1,7 @@
 import Figure, { IPatternPropperties } from './root';
 
 export default class Rook extends Figure {
+  public name = 'rook';
   static patternsPropperties: IPatternPropperties = {
     isSingle: false,
     patterns: [

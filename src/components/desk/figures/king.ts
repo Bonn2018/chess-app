@@ -1,7 +1,12 @@
-import Figure, { IPatternPropperties, IGamePosition, Coordinate, getFiguresByType, isSpaceEmptyByYBetween, getFiguresByColor, getFightMap, getCoordinatesByYBetween, convertCoordinateToString } from './root';
+import { IGamePosition, Coordinate, getFiguresByType, isSpaceEmptyByYBetween, getFiguresByColor, getFightMap, getCoordinatesByYBetween, convertCoordinateToString } from '../helpers';
 
+import Figure, { IPatternPropperties,  } from './root';
 import Queen from './queen';
 import Rook from './rook';
+
+function filterCoordinatesByFightMap(fightMap: Record<string, number>, coordinates: Coordinate[]) {
+  return coordinates.filter(el =>  !fightMap[convertCoordinateToString(el)]);
+}
 
 export default class King extends Figure {
   public isMovedEarly = false;
@@ -9,6 +14,8 @@ export default class King extends Figure {
     isSingle: true,
     patterns: Queen.patternsPropperties.patterns,
   }
+
+  get patternsPropperties() { return King.patternsPropperties };
 
   // Filter rooks by allowed from fighting space between rook and king
   getAllowedRooksToCastling(gamePosition: IGamePosition, rooks: Rook[]) {
@@ -20,15 +27,9 @@ export default class King extends Figure {
 
       coordinatesBetween.push(rook.position, this.position);
 
-      for (let i = 0; i < coordinatesBetween.length; i += 1) {
-        const coordinateString = convertCoordinateToString(coordinatesBetween[i]);
+      const freeCoordinates = filterCoordinatesByFightMap(fightMap, coordinatesBetween);
 
-        if (fightMap[coordinateString]) {
-          return false;
-        }
-      }
-
-      return true;
+      return freeCoordinates.length === coordinatesBetween.length;
     })
   }
 
@@ -36,7 +37,7 @@ export default class King extends Figure {
     const result: Coordinate[] = [];
 
     if (this.isMovedEarly) return result;
-    const ff = getFiguresByType(gamePosition, Rook);
+
     const rooksAvailableToCastling = getFiguresByType(gamePosition, Rook).filter((rook) => rook.color === this.color && !rook.isMovedEarly);
   
     if (!rooksAvailableToCastling.length) return result;
@@ -57,10 +58,14 @@ export default class King extends Figure {
     return result;
   }
 
-  get patternsPropperties() { return King.patternsPropperties };
+  public getFightPositions(gamePosition: IGamePosition): Coordinate[] {
+    return this.buildMovesByPattern(gamePosition);
+  }
 
   getAllowedPositions(gamePosition: IGamePosition) {
-    const result = this.buildMovesByPattern(gamePosition);
+    const opositeFigures = getFiguresByColor(gamePosition, this.color === 'white' ? 'black' : 'white');
+    const fightMap = getFightMap(gamePosition, opositeFigures);
+    const result = filterCoordinatesByFightMap(fightMap, this.buildMovesByPattern(gamePosition));
 
     result.push(...this.getCastlingMoves(gamePosition));
 

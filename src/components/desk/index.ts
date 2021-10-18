@@ -1,3 +1,4 @@
+import { GameStatusModule } from './modules';
 
 /*
   const desk = new DeskController();
@@ -6,7 +7,7 @@
   desk.color = white;
   desk.secondPlayer = auto;
   desk.time = 5 * 60;
-  desk.timeOnCheck = 2;
+  desk.timeOnMove = 2;
   desk.autoplay = {
     deep: 5,
     lavel: 3
@@ -45,6 +46,43 @@
   const partManager = desk.renderHistory(history);
 */
 
-class DeskController {
+type Position = string | [number, number];
+export type IGameStatus =
+  'check_for_white' |
+  'check_for_black' |
+  'win_white' |
+  'win_black' |
+  'game' |
+  'stalemate';
 
+class FigureWrapper {}
+type Square = 0 | FigureWrapper[];
+type Line = [Square, Square, Square, Square, Square, Square, Square, Square];
+export type Desk = [Line, Line, Line, Line, Line, Line, Line, Line];
+
+export default class DeskController {
+  private gameStatusModule = new GameStatusModule();
+  private currentDesk: Desk | null = null;
+  private history: [Position, Position] | null = null;
+
+  public: 'white' | 'black' = 'white';
+  // secondPlayer: 'auto' | 'manual' = 'manual';
+  secondPlayer: 'manual' = 'manual';
+  time: number = 0;
+  timeOnMove: number = 0;
+  // autoplay?: {
+  //   deep: number;
+  //   level: number;
+  // }
+  // users
+
+  public play() {}
+  public getComponentById(id: string) {}
+  public getComponentByPosition(position: Position) {}
+  public getComponentByType(type: string) {}
+  public move(from: Position, to: Position) {}
+
+  public getGameStatus(): IGameStatus {
+
+  }
 }

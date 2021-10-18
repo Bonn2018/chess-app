@@ -1,5 +1,7 @@
+import { Desk } from '../helpers';
+
 import Bishop from './bishop';
-import Figure, { Desk } from './root';
+import Figure from './root';
 
 const whiteFigure = new Figure({
   position: [2, 3],

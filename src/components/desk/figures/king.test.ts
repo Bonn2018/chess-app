@@ -1,7 +1,7 @@
 import King from './king';
 import { Pawn, Queen, Rook } from './';
 
-import { Desk } from './root';
+import { Desk } from '../helpers';
 
 const whitePawn = new Pawn({
   position: [3, 6],

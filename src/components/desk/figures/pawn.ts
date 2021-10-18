@@ -1,6 +1,9 @@
-import Figure, { IPatternPropperties, IGamePosition, getPositionValue, Coordinate, isValidCoordinate } from './root';
+import { IGamePosition, getPositionValue, Coordinate, isValidCoordinate } from '../helpers';
+
+import Figure, { IPatternPropperties } from './root';
 
 export default class Pawn extends Figure {
+  public name = 'pawn';
   static patternsPropperties: IPatternPropperties = {
     isSingle: false,
     patterns: [],
@@ -38,6 +41,39 @@ export default class Pawn extends Figure {
     return [lastMoveX, this.color === 'white' ? y + 1 : y - 1];
   }
 
+  public getFightPositions(gamePosition: IGamePosition): Coordinate[] {
+    const [x, y] = this.position;
+    const result = [];
+
+    const captureInPassant = this.getCaptureInPassant(gamePosition);
+
+    if (captureInPassant) {
+      result.push(captureInPassant);
+    }
+
+    const firstFightApplicant: Coordinate = this.color === 'white' ?
+      [x + 1, y + 1] :
+      [x + 1, y - 1];
+
+    if (isValidCoordinate(firstFightApplicant)) {
+      result.push(firstFightApplicant);
+    }
+
+    const secondFightApplicant: Coordinate = this.color === 'white' ?
+      [x - 1, y + 1] :
+      [x - 1, y - 1];
+
+    if (isValidCoordinate(secondFightApplicant)) {
+      result.push(secondFightApplicant);
+    }
+
+    return result;
+  }
+
+  getProtectedPositions(gamePosition: IGamePosition) {
+    return this.getFightPositions(gamePosition);
+  }
+
   getAllowedPositions(gamePosition: IGamePosition) {
     const [x, y] = this.position;
     const result: Coordinate[] = [];
@@ -67,37 +103,24 @@ export default class Pawn extends Figure {
       }
     }
 
+    // Fight moves
+    const fightPositions = this.getFightPositions(gamePosition);
+
+    for(let i = 0; i < fightPositions.length; i += 1) {
+      const position = fightPositions[i];
+      const positionValue = getPositionValue(
+        gamePosition,
+        position,
+      );
+
+      positionValue && positionValue.color !== this.color && result.push(position);
+    }
+
+    // Capture in passant was returned from "getFightPositions" but omited in "for"
     const captureInPassant = this.getCaptureInPassant(gamePosition);
 
     if (captureInPassant) {
       result.push(captureInPassant);
-    }
-
-    // Fight move
-    const firstFightApplicant: Coordinate = this.color === 'white' ?
-      [x + 1, y + 1] :
-      [x + 1, y - 1];
-
-    if (isValidCoordinate(firstFightApplicant)) {
-      const positionValue = getPositionValue(
-        gamePosition,
-        firstFightApplicant,
-      );
-
-      positionValue && positionValue.color !== this.color && result.push(firstFightApplicant);
-    }
-
-    const secondFightApplicant: Coordinate = this.color === 'white' ?
-      [x - 1, y + 1] :
-      [x - 1, y - 1];
-
-    if (isValidCoordinate(secondFightApplicant)) {
-      const positionValue = getPositionValue(
-        gamePosition,
-        secondFightApplicant,
-      );
-
-      positionValue && positionValue.color !== this.color && result.push(secondFightApplicant);
     }
 
     return result;

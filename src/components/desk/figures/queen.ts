@@ -3,6 +3,7 @@ import Bishop from './bishop';
 import Rook from './rook';
 
 export default class Queen extends Figure {
+  public = 'queen';
   static patternsPropperties: IPatternPropperties = {
     isSingle: false,
     patterns: [

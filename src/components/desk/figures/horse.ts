@@ -1,6 +1,7 @@
 import Figure, { IPatternPropperties } from './root';
 
 export default class Horse extends Figure {
+  public name = 'knight'
   static get patternsPropperties(): IPatternPropperties  {
     return {
       isSingle: true,

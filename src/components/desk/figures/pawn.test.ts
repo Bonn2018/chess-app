@@ -1,5 +1,6 @@
+import { Desk } from '../helpers';
+
 import Pawn from './pawn';
-import { Desk } from './root';
 
 let firstWhitePawn: Pawn;
 let secondWhitePawn: Pawn;

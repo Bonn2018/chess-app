@@ -51,7 +51,7 @@ Structure:
   ui --> package.json
   portal --> src
   portal --> public
-  portal --> package.json
+  portal --> portal/package.json
   portal --> README.md
   src --> components
   components --> peculiar_components

@@ -47,10 +47,24 @@ Structure:
 
 ```mermaid
   graph TD;
-  Root --> public
-  Root --> src
+  ui --> portal
+  ui --> package.json
+  portal --> src
+  portal --> public
+  portal --> package.json
+  portal --> README.md
   src --> components
-  components --> desk
+  components --> peculiar_components
+  components --> ...rest components
   src --> App.tsx
   src --> index.tsx
+  src --> assets
+  src --> hooks
+  src --> pages
+  src --> controllers
+  src --> utils
+  pages --> organization
+  pages --> authorize
+  pages --> keys
+  pages --> certificates
 ```

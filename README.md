@@ -55,7 +55,7 @@ Structure:
   portal --> README.md
   src --> components
   components --> peculiar_components
-  components --> ...rest components
+  components --> ...rest_components
   src --> App.tsx
   src --> index.tsx
   src --> assets
